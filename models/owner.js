@@ -11,7 +11,8 @@ const ownerSchema = new Schema({
         message: '{VALUE} is not a valid phone number!'
         }
     },
-    remainingAmount:{type:Number}
+    email:{type:String,required:[true,"Email Id must be supplied"]},
+    panNumber:{type:Number,required:[true,"Pan Number must be supplied"]}
 })
 
 let Owner = mongoose.model('Owner', ownerSchema);
