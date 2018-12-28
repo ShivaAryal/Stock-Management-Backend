@@ -4,12 +4,8 @@ const secret = 'shiva'
 const nodeMailer = require('nodemailer');
 
 const Admin = require('./../models/admin');
-const BoughtGood = require('./../models/boughtGood');
-const SoldGood = require('./../models/soldGood');
-const Customer = require('./../models/customer');
-const Owner = require('./../models/owner');
 
-//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjViNGI1YTkxODIzZjhjMWQ3ODAxNzVhNiIsImlhdCI6MTUzMTY2NTA2Nn0.qz9nm_8jPyOsGJH39G2ugdx_5DIX1GnLmQuBgmFkWyk
+// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjMTY4NGU3ODQ4NGFlMjg1Y2I0MjAxZSIsImlhdCI6MTU0NDk3OTgxMH0.kyAOrnMq6if_p24F4_OoNAdmUHq8Ll48oqzKGqnxxmI
 
 const adminLogin = (email,password) => new Promise((resolve,reject)=>{
     Admin.findOne({email:email},(err,admin)=>{
@@ -66,82 +62,82 @@ const getAdmin  = () => new Promise((resolve,reject)=>{
     })
 })
 
-const addPurchaser = (owner) => new Promise((resolve,reject)=>{
-    let ownerData = new Owner(owner);
-    ownerData.save((err,myOwner)=>{
-        err && reject(err) || resolve(myOwner);
-    })
-})
-
-const getPurchaser = () => new Promise((resolve,reject)=>{
-    Owner.find({},(err,owners)=>{
-        err && reject(err) || resolve(owners);
-    })
-})
-
-const addBoughtGood = (good) => new Promise((resolve,reject)=>{
-    let boughtGoodData = new BoughtGood(good);
-    boughtGoodData.save((err,myGood)=>{
-        Owner.findOne({_id:good.owner},(err,owner)=>{
-            if(err) reject(err);
-            owner.remainingAmount+=good.remainingAmount;
-            owner.save((err,theOwner)=>{
-                err && reject(err) || resolve(myGood);
-            })
-        })
-    })
-})
-
-const getBoughtGood = () => new Promise((resolve,reject)=>{
-    BoughtGood.find({},(err,myGoods)=>{
-        err && reject(err) || resolve(myGoods);
-    })
-})
-
-const addCustomer = (customer) => new Promise((resolve,reject)=>{
-    let customerData = new Customer(customer);
-    customerData.save((err,myCustomer)=>{
-        err && reject(err) || resolve(myCustomer);
-    })
-})
-
-const getCustomer = () => new Promise((resolve,reject)=>{
-    Customer.find({},(err,customers)=>{
-        err && reject(err) || resolve(customers);
-    })
-})
-
-const getCustomerTransaction = (id) => new Promise((resolve,reject)=>{
-    SoldGood.find({customer:id},(err, transactions)=>{
-        err && reject(err) || resolve(transactions);
-    })
-})
-
-const addSoldGood = (good) => new Promise((resolve,reject)=>{
-    let soldGoodData = new SoldGood(good);
-    soldGoodData.save((err,myGood)=>{
-        if(err) reject(err);
-        Customer.findOne({_id:good.customer},(err,myCustomer)=>{
-            if(err) reject(err);
-            console.log(myCustomer);
-            myCustomer.remainingAmount+=good.remainingAmount
-            myCustomer.save((err,theCustomer)=>{
-                err && reject(err) || resolve(myGood);
-            })
-        })
-    })
-})
-
-const getSoldGood= () => new Promise((resolve,reject)=>{
-    SoldGood.find({},(err,goods)=>{
-        err && reject(err)|| resolve(goods);
-    })
-})
-
-// const getCustomerSoldGood = (id) => new Promise((resolve,reject)=>{
-//     SoldGood.find({})
+// const addPurchaser = (owner) => new Promise((resolve,reject)=>{
+//     let ownerData = new Owner(owner);
+//     ownerData.save((err,myOwner)=>{
+//         err && reject(err) || resolve(myOwner);
+//     })
 // })
 
+// const getPurchaser = () => new Promise((resolve,reject)=>{
+//     Owner.find({},(err,owners)=>{
+//         err && reject(err) || resolve(owners);
+//     })
+// })
+
+// const addBoughtGood = (good) => new Promise((resolve,reject)=>{
+//     let boughtGoodData = new BoughtGood(good);
+//     boughtGoodData.save((err,myGood)=>{
+//         Owner.findOne({_id:good.owner},(err,owner)=>{
+//             if(err) reject(err);
+//             owner.remainingAmount+=good.remainingAmount;
+//             owner.save((err,theOwner)=>{
+//                 err && reject(err) || resolve(myGood);
+//             })
+//         })
+//     })
+// })
+
+// const getBoughtGood = () => new Promise((resolve,reject)=>{
+//     BoughtGood.find({},(err,myGoods)=>{
+//         err && reject(err) || resolve(myGoods);
+//     })
+// })
+
+// const addCustomer = (customer) => new Promise((resolve,reject)=>{
+//     let customerData = new Customer(customer);
+//     customerData.save((err,myCustomer)=>{
+//         err && reject(err) || resolve(myCustomer);
+//     })
+// })
+
+// const getCustomer = () => new Promise((resolve,reject)=>{
+//     Customer.find({},(err,customers)=>{
+//         err && reject(err) || resolve(customers);
+//     })
+// })
+
+// const getCustomerTransaction = (id) => new Promise((resolve,reject)=>{
+//     SoldGood.find({customer:id},(err, transactions)=>{
+//         err && reject(err) || resolve(transactions);
+//     })
+// })
+
+// const addSoldGood = (good) => new Promise((resolve,reject)=>{
+//     let soldGoodData = new SoldGood(good);
+//     soldGoodData.save((err,myGood)=>{
+//         if(err) reject(err);
+//         Customer.findOne({_id:good.customer},(err,myCustomer)=>{
+//             if(err) reject(err);
+//             console.log(myCustomer);
+//             myCustomer.remainingAmount+=good.remainingAmount
+//             myCustomer.save((err,theCustomer)=>{
+//                 err && reject(err) || resolve(myGood);
+//             })
+//         })
+//     })
+// })
+
+// const getSoldGood= () => new Promise((resolve,reject)=>{
+//     SoldGood.find({},(err,goods)=>{
+//         err && reject(err)|| resolve(goods);
+//     })
+// })
+
+// // const getCustomerSoldGood = (id) => new Promise((resolve,reject)=>{
+// //     SoldGood.find({})
+// // })
+
 module.exports={
-    adminLogin,addAdmin,getAdmin,addPurchaser,getPurchaser,addBoughtGood,getBoughtGood,addCustomer,getCustomer,getCustomerTransaction,addSoldGood,getSoldGood
+    adminLogin,addAdmin,getAdmin
 }
