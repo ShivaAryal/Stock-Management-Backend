@@ -53,24 +53,23 @@ const postChamalSales = (sales) => new Promise((resolve,reject)=>{
             let myMonthSale = {}
             if(err) reject(err);
             else if(!monthlySale){
-                console.log("i m here")
                 myMonthSale.month=parseInt(sales.date.slice(5,7))
                 myMonthSale.total = sales.unitPrice*sales.noofPackets
                 getUnitPrice().then(res=>{
                     myMonthSale.profit = sales.unitPrice*sales.noofPackets- sales.noofPackets *0.72*res[0]-sales.noofPackets *0.28*res[1]
+                    // console.log("mymonth sale",myMonthSale);
                     let monthData = new MonthlySales(myMonthSale);
                     monthData.save((err,data)=>{
                         err && reject(err) || resolve(sales)
                     })
                 })
             }else{
-                monthlySale._id = monthlySale._id,
-                monthlySale.month = monthlySale.month,
-                monthlySale.total = monthlySale.total + sales.unitPrice*sales.noofPackets
                 getUnitPrice().then(res=>{
-                    myMonthSale.profit = monthlySale.profit+sales.unitPrice*sales.noofPackets- sales.noofPackets *0.72*res[0]-sales.noofPackets *0.28*res[1]
-                    let monthData = new MonthlySales(myMonthSale);
-                    monthData.save((err,data)=>{
+                    monthlySale._id = monthlySale._id,
+                    monthlySale.month = monthlySale.month,
+                    monthlySale.total = monthlySale.total + sales.unitPrice*sales.noofPackets
+                    monthlySale.profit = monthlySale.profit+sales.unitPrice*sales.noofPackets- sales.noofPackets *0.72*res[0]-sales.noofPackets *0.28*res[1]
+                    monthlySale.save((err,data)=>{
                         err && reject(err) || resolve(sales)
                     })
                 })
