@@ -32,7 +32,6 @@ const getUnitPrice = ()=>new Promise((resolve,reject)=>{
 })
 
 const postChamalSales = (sales) => new Promise((resolve,reject)=>{
-    var myMonthSale = {}
     let saleData = new Chamal(sales);
     saleData.save((err,sales)=>{
         if(err) reject(err);
@@ -50,8 +49,8 @@ const postChamalSales = (sales) => new Promise((resolve,reject)=>{
             })
         })
 
-        MonthlySales.findOne({month:parseInt(sales.date.slice(5,7))},(err,monthlySale)=>{
-            
+        MonthlySales.findOne({month:parseInt(sales.date.slice(5,7))},(err,monthlySale)=>{  
+            let myMonthSale = {}
             if(err) reject(err);
             else if(!monthlySale){
                 console.log("i m here")
