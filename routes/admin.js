@@ -28,6 +28,14 @@ router.get('/',helper.authenticated,(req,res)=>{
     })
 })
 
+router.post('/editPassword',helper.authenticated,(req,res)=>{
+    adminController.editPassword(req.user_id,req.body.oldPassword,req.body.newPassword).then(admin=>{
+        response.sendDataSuccess(res,"",admin);
+    }).catch(err=>{
+        response.sendDBError(res,err)
+    })
+})
+
 router.post('/addPurchaser',helper.authenticated,(req,res)=>{
     adminController.addPurchaser(req.body).then(purchaser=>{
         response.sendDataSuccess(res,"",purchaser)

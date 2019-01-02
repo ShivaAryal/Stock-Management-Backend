@@ -62,6 +62,23 @@ const getAdmin  = () => new Promise((resolve,reject)=>{
     })
 })
 
+const editPassword = (id,oldPassword,newPassword) => new Promise((resolve,reject)=>{
+    Admin.findOne({_id:id},(err,admin)=>{
+        if(err) reject(err)
+        if(admin){
+            const oldPasswordisValid=bcrypt.compareSync(oldPassword,admin.password)
+            if(!oldPasswordisValid){
+                reject("Old password doesn't match")
+            }else{
+                admin.password=newPassword;
+                admin.save((err,myAdmin)=>{
+                    err && reject(err) || resolve(myAdmin);
+                })
+            }
+        }
+    })
+})
+
 // const addPurchaser = (owner) => new Promise((resolve,reject)=>{
 //     let ownerData = new Owner(owner);
 //     ownerData.save((err,myOwner)=>{
@@ -139,5 +156,5 @@ const getAdmin  = () => new Promise((resolve,reject)=>{
 // // })
 
 module.exports={
-    adminLogin,addAdmin,getAdmin
+    adminLogin,addAdmin,getAdmin,editPassword
 }
