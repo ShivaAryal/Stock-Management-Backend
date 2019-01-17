@@ -1,4 +1,5 @@
 const Dhan = require('./../../models/Stocks/DhanStock');
+const MonthlyPurchase = require('./../../models/monthlyPurchase');
 
 const getDhanStock = () => new Promise((resolve,reject)=>{
     Dhan.find({},(err,stock)=>{
@@ -14,6 +15,7 @@ const postDhanStock = (stock) => new Promise((resolve,reject)=>{
             dhanStock.good=stock.good
             dhanStock.unitPrice = stock.unitPrice
             dhanStock.noofPackets = stock.noofPackets
+            dhanStock.date = stock.date
             let dhanData = new Dhan(dhanStock);
             dhanData.save((err,res)=>{
                 err && reject(err) || resolve(res);
@@ -23,12 +25,33 @@ const postDhanStock = (stock) => new Promise((resolve,reject)=>{
             dhan._id = dhan._id
             dhan.good = dhan.good
             dhan.noofPackets = dhan.noofPackets + stock.noofPackets
-            dhan.unitPrice = dhan.unitPrice
+            dhan.unitPrice = stock.unitPrice
+            dhan.date = stock.date
             dhan.save((err,res)=>{
                 err && reject(err) || resolve(res);
             })
         }
     })
+    
+    MonthlyPurchase.findOne({month:parseInt(stock.date.slice(5,7))},(err,purchase)=>{
+        console.log(" i m here")
+        if(err) reject(err);
+        let monthPurchase = {}
+        if(!purchase){
+            monthPurchase.month = parseInt(stock.date.slice(5,7))
+            monthPurchase.total = stock.unitPrice * stock.noofPackets
+            let purchaseData = new MonthlyPurchase(monthPurchase);
+            purchaseData.save((err,data)=>{
+                err && reject(err) || resolve(data)
+            })
+        }else{
+            purchase.total = purchase.total + stock.unitPrice * stock.noofPackets
+            purchase.save((err,data)=>{
+                err && reject(err) || resolve(data)
+            })
+        }
+    })
+
 })
 
 module.exports ={

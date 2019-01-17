@@ -1,6 +1,7 @@
 const Chamal = require('./../../models/Sales/ChamalSales');
 const Dhan = require('./../../models/Stocks/DhanStock');
 const MonthlySales = require('./../../models/Sales/MonthlySales');
+const ChamalMonthlySales = require('./../../models/MonthlySales/chamalMonthlySales');
 
 const getChamalSales = () => new Promise((resolve,reject)=>{
     Chamal.find({},(err,sales)=>{
@@ -17,6 +18,12 @@ const getChamalSales = () => new Promise((resolve,reject)=>{
             salesArr.push(saleObj)
         })
         err && reject(err) || resolve(salesArr);
+    })
+})
+
+const getChamalMonthlySales = () => new Promise((resolve,reject)=>{
+    ChamalMonthlySales.find({},(err,sales)=>{
+        err && reject(err) || resolve(sales)
     })
 })
 
@@ -49,6 +56,25 @@ const postChamalSales = (sales) => new Promise((resolve,reject)=>{
             })
         })
 
+        ChamalMonthlySales.findOne({month:parseInt(sales.date.slice(5,7))},(err,monthlySale)=>{
+            let myMonthSale = {}
+            if(err) reject(err)
+            else if(!monthlySale){
+                myMonthSale.month = parseInt(sales.date.slice(5,7))
+                myMonthSale.total = sales.unitPrice * sales.noofPackets
+                let monthData = new ChamalMonthlySales(myMonthSale);
+                monthData.save((err,data)=>{
+                    err && reject(err) || resolve(sales)
+                })
+            }else{
+                monthlySale.month = monthlySale.month
+                monthlySale.total = monthlySale.total + sales.unitPrice * sales.noofPackets
+                monthlySale.save((err,data)=>{
+                    err && reject(err) || resolve(sales)
+                })
+            }
+        })
+
         MonthlySales.findOne({month:parseInt(sales.date.slice(5,7))},(err,monthlySale)=>{  
             let myMonthSale = {}
             if(err) reject(err);
@@ -79,5 +105,5 @@ const postChamalSales = (sales) => new Promise((resolve,reject)=>{
 })
 
 module.exports={
-    getChamalSales,postChamalSales
+    getChamalSales,postChamalSales, getChamalMonthlySales
 }

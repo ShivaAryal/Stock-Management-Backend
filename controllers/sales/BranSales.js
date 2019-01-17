@@ -1,5 +1,6 @@
 const Bran = require('./../../models/Sales/BranSales');
 const MonthlySales = require('./../../models/Sales/MonthlySales');
+const BranMonthlySales = require('./../../models/MonthlySales/branMonthlySales');
 
 const getBranSales = () => new Promise((resolve,reject)=>{
     Bran.find({},(err,sales)=>{
@@ -19,11 +20,35 @@ const getBranSales = () => new Promise((resolve,reject)=>{
     })
 })
 
+const getBranMonthlySales = () => new Promise((resolve,reject)=>{
+    BranMonthlySales.find({},(err,sales)=>{
+        err && reject(err) || resolve(sales)
+    })
+})
+
 const postBranSales = (sales) => new Promise((resolve,reject)=>{
     let saleData = new Bran(sales);
     saleData.save((err,sales)=>{
-        // err && reject(err) || resolve(sales)
         if(err) reject(err);
+        BranMonthlySales.findOne({month:parseInt(sales.date.slice(5,7))},(err,monthlySale)=>{
+            let myMonthSale = {}
+            if(err) reject(err)
+            else if(!monthlySale){
+                myMonthSale.month = parseInt(sales.date.slice(5,7))
+                myMonthSale.total = sales.unitPrice * sales.noofPackets
+                let monthData = new BranMonthlySales(myMonthSale);
+                monthData.save((err,data)=>{
+                    err && reject(err) || resolve(sales)
+                })
+            }else{
+                monthlySale.month = monthlySale.month
+                monthlySale.total = monthlySale.total + sales.unitPrice * sales.noofPackets
+                monthlySale.save((err,data)=>{
+                    err && reject(err) || resolve(sales)
+                })
+            }
+        })
+
         MonthlySales.findOne({month:parseInt(sales.date.slice(5,7))},(err,monthlySale)=>{
             let myMonthSale = {}
             if(err) reject(err);
@@ -45,10 +70,9 @@ const postBranSales = (sales) => new Promise((resolve,reject)=>{
                 })
             }
         })
-
     })
 })
 
 module.exports={
-    getBranSales,postBranSales
+    getBranSales,postBranSales, getBranMonthlySales
 }

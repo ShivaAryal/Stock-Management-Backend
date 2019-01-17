@@ -1,5 +1,6 @@
 const Bhush = require('./../../models/Sales/BhushSales');
 const MonthlySales = require('./../../models/Sales/MonthlySales');
+const BhushMonthlySales = require('./../../models/MonthlySales/bhushMonthlySales');
 
 const getBhushSales = () => new Promise((resolve,reject)=>{
     Bhush.find({},(err,sales)=>{
@@ -19,10 +20,36 @@ const getBhushSales = () => new Promise((resolve,reject)=>{
     })
 })
 
+const getBhushMonthlySales = () => new Promise((resolve,reject)=>{
+    BhushMonthlySales.find({},(err,sales)=>{
+        err && reject(err) || resolve(sales)
+    })
+})
+
 const postBhushSales = (sales) => new Promise((resolve,reject)=>{
     let saleData = new Bhush(sales);
     saleData.save((err,sales)=>{
         if(err) reject(err);
+        
+        BhushMonthlySales.findOne({month:parseInt(sales.date.slice(5,7))},(err,monthlySale)=>{
+            let myMonthSale = {}
+            if(err) reject(err)
+            else if(!monthlySale){
+                myMonthSale.month = parseInt(sales.date.slice(5,7))
+                myMonthSale.total = sales.unitPrice * sales.noofPackets
+                let monthData = new BhushMonthlySales(myMonthSale)
+                monthData.save((err,data)=>{
+                    err && reject(err) || resolve(sales)
+                })
+            }else{
+                monthlySale.month = monthlySale.month
+                monthlySale.total = monthlySale.total + sales.unitPrice * sales.noofPackets
+                monthlySale.save((err,data)=>{
+                    err && reject(err) || resolve(sales)
+                })
+            }
+        })
+        
         MonthlySales.findOne({month:parseInt(sales.date.slice(5,7))},(err,monthlySale)=>{
             let myMonthSale = {}
             if(err) reject(err);
@@ -48,5 +75,5 @@ const postBhushSales = (sales) => new Promise((resolve,reject)=>{
 })
 
 module.exports={
-    getBhushSales,postBhushSales
+    getBhushSales,postBhushSales, getBhushMonthlySales
 }

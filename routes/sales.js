@@ -78,12 +78,44 @@ router.get('/monthlySales',helper.authenticated,(req,res)=>{
     })
 })
 
-router.get('/monthlySales/:month',helper.authenticated,(req,res)=>{
-    monthController.getCurrenMonthSale(month).then(sale=>{
-        response.sendDataSuccess(res,"",sale);
+router.get('/chamalMonthlySales',helper.authenticated,(req,res)=>{
+    chamalController.getChamalMonthlySales().then(sales=>{
+        response.sendDataSuccess(res,"",sales)
     }).catch(err=>{
         response.sendDataError(res,err);
     })
 })
+
+router.get('/kanikaMonthlySales',helper.authenticated,(req,res)=>{
+    kanikaController.getKanikaMonthlySales().then(sales=>{
+        response.sendDataSuccess(res,"",sales)
+    }).catch(err=>{
+        response.sendDataError(res,err);
+    })
+})
+
+router.get('/branMonthlySales',helper.authenticated,(req,res)=>{
+    branController.getBranMonthlySales().then(sales=>{
+        response.sendDataSuccess(res,"",sales)
+    }).catch(err=>{
+        response.sendDataError(res,err)
+    })
+})
+
+router.get('/bhushMonthlySales',helper.authenticated,(req,res)=>{
+    bhushController.getBhushMonthlySales().then(sales=>{
+        response.sendDataSuccess(res,"",sales)
+    }).catch(err=>{
+        response.sendDataError(res,err)
+    })
+})
+
+// router.get('/monthlySales/:month',helper.authenticated,(req,res)=>{
+//     monthController.getCurrenMonthSale(month).then(sale=>{
+//         response.sendDataSuccess(res,"",sale);
+//     }).catch(err=>{
+//         response.sendDataError(res,err);
+//     })
+// })
 
 module.exports = router;
