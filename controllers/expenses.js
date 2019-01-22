@@ -4,10 +4,8 @@ const MonthlyExpense = require('./../models/monthlyExpense');
 
 const getExpense = () => new Promise((resolve,reject)=>{
     Expense.find({},(err,expenses)=>{
-        console.log("gete xpeses",expenses)
         if(err) reject(err);
         let date = new Date();
-        console.log("month",date.getMonth())
         let currentMonthExpense = []
         expenses.map((expense,i)=>{
             if ((date.getMonth())+1==parseInt(expense.date.slice(5,7))){
@@ -19,7 +17,6 @@ const getExpense = () => new Promise((resolve,reject)=>{
 })
 
 const addExpense = (expense) => new Promise((resolve,reject)=>{
-    console.log(expense)
     let expenseData = new Expense(expense);
     expenseData.save((err,expenses)=>{
         if(err) reject(err)
@@ -30,7 +27,6 @@ const addExpense = (expense) => new Promise((resolve,reject)=>{
             else if(!myExpense){
                 newExpenseObj.month = parseInt(expense.date.slice(5,7))
                 newExpenseObj.total = expense.price;
-                console.log(" i m here",newExpenseObj)
                 let newExpense = new MonthlyExpense(newExpenseObj);
                 newExpense.save((err,response)=>{
                     err && reject(err) || resolve(expenses)
@@ -46,6 +42,24 @@ const addExpense = (expense) => new Promise((resolve,reject)=>{
         })
     })
 }) 
+
+const editExpense = (expense) => new Promise((resolve,reject)=>{
+    Expense.findOne({_id:expense.id},(err,myExpense)=>{
+        if(err) reject(err)
+        myExpense.name = expense.name
+        myExpense.date = expense.date
+        myExpense.price = expense.price
+        myExpense.save((err,data)=>{
+            err && reject(err) || resolve(data)
+        })
+    })
+})
+
+const deleteExpense = (id) => new Promise((resolve,reject)=>{
+    Expense.deleteOne({_id:id},(err,data)=>{
+        err && reject(err) || resolve(data);
+    })
+})
 
 const getMonthlyExpenses = () => new Promise((resolve,reject)=>{
     MonthlyExpense.find({},(err,expenses)=>{
@@ -74,5 +88,5 @@ const getMonthlyExpenses = () => new Promise((resolve,reject)=>{
 // })
 
 module.exports={
-    getExpense,addExpense,getMonthlyExpenses
+    getExpense,addExpense,getMonthlyExpenses, editExpense, deleteExpense
 }

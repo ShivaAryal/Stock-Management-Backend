@@ -22,6 +22,23 @@ router.post('/chamalSales',helper.authenticated,(req,res)=>{
     })
 })
 
+router.post('/editChamalSale',helper.authenticated,(req,res)=>{
+    chamalController.editChamalSale(req.body).then(sales=>{
+        response.sendDataSuccess(res,"",sales)
+    }).catch(err=>{
+        response.sendDataError(res,err)
+    })
+})
+
+router.post('/deleteChamalSale',helper.authenticated,(req,res)=>{
+    console.log("id",req.body.id)
+    chamalController.deleteChamalSale(req.body.id).then(sales=>{
+        response.sendDataSuccess(res,"",sales)
+    }).catch(err=>{
+        response.sendDataError(res,err)
+    })
+})
+
 router.get('/kanikaSales',helper.authenticated,(req,res)=>{
     kanikaController.getKanikaSales().then(sales=>{
         response.sendDataSuccess(res,"",sales);
@@ -35,6 +52,22 @@ router.post('/kanikaSales',helper.authenticated,(req,res)=>{
         response.sendDataSuccess(res,"",sales);
     }).catch(err=>{
         response.sendDataError(res,err);
+    })
+})
+
+router.post('/editKanikaSale',helper.authenticated,(req,res)=>{
+    kanikaController.editKanikaSale(req.body).then(sales=>{
+        response.sendDataSuccess(res,"",sales)
+    }).catch(err=>{
+        response.sendDataError(res,err)
+    })
+})
+
+router.post('/deleteKanikaSale',helper.authenticated,(req,res)=>{
+    kanikaController.deleteKanikaSale(req.body.id).then(sales=>{
+        response.sendDataSuccess(res,"",sales)
+    }).catch(err=>{
+        response.sendDataError(res,err)
     })
 })
 
@@ -54,6 +87,22 @@ router.post('/branSales',helper.authenticated,(req,res)=>{
     })
 })
 
+router.post('/editBranSale',helper.authenticated,(req,res)=>{
+    branController.editBranSale(req.body).then(sales=>{
+        response.sendDataSuccess(res,"",sales)
+    }).catch(err=>{
+        response.sendDataError(res,err)
+    })
+})
+
+router.post('/deleteBranSale',helper.authenticated,(req,res)=>{
+    branController.deleteBranSale(req.body.id).then(sales=>{
+        response.sendDataSuccess(res,"",sales)
+    }).catch(err=>{
+        response.sendDataError(res,err)
+    })
+})
+
 router.get('/bhushSales',helper.authenticated,(req,res)=>{
     bhushController.getBhushSales().then(sales=>{
         response.sendDataSuccess(res,"",sales);
@@ -67,6 +116,22 @@ router.post('/bhushSales',helper.authenticated,(req,res)=>{
         response.sendDataSuccess(res,"",sales);
     }).catch(err=>{
         response.sendDataError(res,err);
+    })
+})
+
+router.post('/editBhushSale',helper.authenticated,(req,res)=>{
+    bhushController.editBhushSale(req.body).then(sales=>{
+        response.sendDataSuccess(res,"",sales)
+    }).catch(err=>{
+        response.sendDataError(res,err)
+    })
+})
+
+router.post('/deleteBhushSale',helper.authenticated,(req,res)=>{
+    bhushController.deleteBhushSale(req.body.id).then(sales=>{
+        response.sendDataSuccess(res,"",sales)
+    }).catch(err=>{
+        response.sendDataError(res,err)
     })
 })
 
@@ -109,13 +174,5 @@ router.get('/bhushMonthlySales',helper.authenticated,(req,res)=>{
         response.sendDataError(res,err)
     })
 })
-
-// router.get('/monthlySales/:month',helper.authenticated,(req,res)=>{
-//     monthController.getCurrenMonthSale(month).then(sale=>{
-//         response.sendDataSuccess(res,"",sale);
-//     }).catch(err=>{
-//         response.sendDataError(res,err);
-//     })
-// })
 
 module.exports = router;

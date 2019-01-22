@@ -1,5 +1,6 @@
 const Dhan = require('./../../models/Stocks/DhanStock');
 const MonthlyPurchase = require('./../../models/monthlyPurchase');
+const DhanPurchase = require('./../../models/DhanPurchase');
 
 const getDhanStock = () => new Promise((resolve,reject)=>{
     Dhan.find({},(err,stock)=>{
@@ -9,28 +10,32 @@ const getDhanStock = () => new Promise((resolve,reject)=>{
 
 const postDhanStock = (stock) => new Promise((resolve,reject)=>{
     let dhanStock = {}
-    Dhan.findOne({good:stock.good},(err,dhan)=>{
-        if(err) reject(err);
-        else if(!dhan){
-            dhanStock.good=stock.good
-            dhanStock.unitPrice = stock.unitPrice
-            dhanStock.noofPackets = stock.noofPackets
-            dhanStock.date = stock.date
-            let dhanData = new Dhan(dhanStock);
-            dhanData.save((err,res)=>{
-                err && reject(err) || resolve(res);
-            })
-        }
-        else{
-            dhan._id = dhan._id
-            dhan.good = dhan.good
-            dhan.noofPackets = dhan.noofPackets + stock.noofPackets
-            dhan.unitPrice = stock.unitPrice
-            dhan.date = stock.date
-            dhan.save((err,res)=>{
-                err && reject(err) || resolve(res);
-            })
-        }
+    let purchaseData = new DhanPurchase(stock);
+    purchaseData.save((err,stock)=>{
+        if(err) reject(err)
+        Dhan.findOne({good:stock.good},(err,dhan)=>{
+            if(err) reject(err);
+            else if(!dhan){
+                dhanStock.good=stock.good
+                dhanStock.unitPrice = stock.unitPrice
+                dhanStock.noofPackets = stock.noofPackets
+                dhanStock.date = stock.date
+                let dhanData = new Dhan(dhanStock);
+                dhanData.save((err,res)=>{
+                    err && reject(err) || resolve(res);
+                })
+            }
+            else{
+                dhan._id = dhan._id
+                dhan.good = dhan.good
+                dhan.noofPackets = dhan.noofPackets + stock.noofPackets
+                dhan.unitPrice = stock.unitPrice
+                dhan.date = stock.date
+                dhan.save((err,res)=>{
+                    err && reject(err) || resolve(res);
+                })
+            }
+        })
     })
     
     MonthlyPurchase.findOne({month:parseInt(stock.date.slice(5,7))},(err,purchase)=>{

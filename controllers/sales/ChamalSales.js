@@ -104,6 +104,25 @@ const postChamalSales = (sales) => new Promise((resolve,reject)=>{
     })
 })
 
+const editChamalSale = (sale) => new Promise((resolve,reject)=>{
+    Chamal.findOne({_id:sale.id},(err,mySale)=>{
+        if(err) reject(err);
+        mySale.customer = sale.customer
+        mySale.unitPrice = sale.unitPrice
+        mySale.noofPackets = sale.noofPackets
+        mySale.date = sale.date
+        mySale.save((err,data)=>{
+            err && reject(err) || resolve(data)
+        })
+    })
+})
+
+const deleteChamalSale = (id) => new Promise((resolve,reject)=>{
+    Chamal.deleteOne({_id:id},(err,data)=>{
+        err && reject(err) || resolve(data)
+    })
+})
+
 module.exports={
-    getChamalSales,postChamalSales, getChamalMonthlySales
+    getChamalSales,postChamalSales, getChamalMonthlySales, editChamalSale, deleteChamalSale
 }

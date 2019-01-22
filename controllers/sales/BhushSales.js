@@ -74,6 +74,26 @@ const postBhushSales = (sales) => new Promise((resolve,reject)=>{
     })
 })
 
+const editBhushSale = (sale) => new Promise((resolve,reject)=>{
+    console.log("from frpomtend",sale)
+    Bhush.findOne({_id:sale.id},(err,mySale)=>{
+        if(err) reject(err);
+        mySale.customer = sale.customer
+        mySale.unitPrice = sale.unitPrice
+        mySale.noofPackets = sale.noofPackets
+        mySale.date = sale.date
+        mySale.save((err,data)=>{
+            err && reject(err) || resolve(data)
+        })
+    })
+})
+
+const deleteBhushSale = (id) => new Promise((resolve,reject)=>{
+    Bhush.deleteOne({_id:id},(err,data)=>{
+        err && reject(err) || resolve(data)
+    })
+})
+
 module.exports={
-    getBhushSales,postBhushSales, getBhushMonthlySales
+    getBhushSales,postBhushSales, getBhushMonthlySales, editBhushSale, deleteBhushSale
 }

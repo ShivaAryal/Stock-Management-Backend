@@ -74,6 +74,25 @@ const postKanikaSales = (sales) => new Promise((resolve,reject)=>{
     })
 })
 
+const editKanikaSale = (sale) => new Promise((resolve,reject)=>{
+    Kanika.findOne({_id:sale.id},(err,mySale)=>{
+        if(err) reject(err);
+        mySale.customer = sale.customer
+        mySale.unitPrice = sale.unitPrice
+        mySale.noofPackets = sale.noofPackets
+        mySale.date = sale.date
+        mySale.save((err,data)=>{
+            err && reject(err) || resolve(data)
+        })
+    })
+})
+
+const deleteKanikaSale = (id) => new Promise((resolve,reject)=>{
+    Kanika.deleteOne({_id:id},(err,data)=>{
+        err && reject(err) || resolve(data)
+    })
+})
+
 module.exports={
-    getKanikaSales,postKanikaSales, getKanikaMonthlySales
+    getKanikaSales,postKanikaSales, getKanikaMonthlySales, editKanikaSale, deleteKanikaSale
 }

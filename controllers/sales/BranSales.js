@@ -73,6 +73,25 @@ const postBranSales = (sales) => new Promise((resolve,reject)=>{
     })
 })
 
+const editBranSale = (sale) => new Promise((resolve,reject)=>{
+    Bran.findOne({_id:sale.id},(err,mySale)=>{
+        if(err) reject(err);
+        mySale.customer = sale.customer
+        mySale.unitPrice = sale.unitPrice
+        mySale.noofPackets = sale.noofPackets
+        mySale.date = sale.date
+        mySale.save((err,data)=>{
+            err && reject(err) || resolve(data)
+        })
+    })
+})
+
+const deleteBranSale = (id) => new Promise((resolve,reject)=>{
+    Bran.deleteOne({_id:id},(err,data)=>{
+        err && reject(err) || resolve(data)
+    })
+})
+
 module.exports={
-    getBranSales,postBranSales, getBranMonthlySales
+    getBranSales,postBranSales, getBranMonthlySales, editBranSale, deleteBranSale
 }
